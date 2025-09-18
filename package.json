@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A simple plop generator for development",
   "main": "plopfile.js",
+  "bin": {
+    "plop-generator": "bin/index.js"
+  },
   "scripts": {
     "java": "plop java-microservice"
   },
@@ -11,7 +14,7 @@
     "generator",
     "nodejs"
   ],
-  "author": "",
+  "author": "kaptain",
   "license": "Apache-2.0",
   "dependencies": {
     "plop": "^3.1.2"
