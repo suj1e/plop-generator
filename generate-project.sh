@@ -42,8 +42,41 @@ function show_menu() {
 # 生成Java微服务项目
 function generate_java_project() {
     echo -e "\n${GREEN}正在启动Java微服务项目生成器...${NC}\n"
-    # 调用现有的Java微服务生成器
-    npm run java
+    # 获取当前脚本所在目录
+    SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+    
+    # 检查是否能找到plop命令
+    # 确保指定plopfile.js的完整路径
+    PLOPFILE_PATH="$SCRIPT_DIR/plopfile.js"
+    
+    if command -v plop &> /dev/null; then
+        # 如果系统中有plop命令，直接使用并指定plopfile路径
+        plop java-microservice --plopfile "$PLOPFILE_PATH"
+    elif [ -f "$SCRIPT_DIR/node_modules/.bin/plop" ]; then
+        # 如果在当前项目的node_modules中有plop，使用它并指定plopfile路径
+        "$SCRIPT_DIR/node_modules/.bin/plop" java-microservice --plopfile "$PLOPFILE_PATH"
+    else
+        # 尝试全局node_modules路径（适用于全局安装的情况）
+        # 通常全局node_modules的位置
+        NODE_MODULES_PATHS=("$(npm root -g)" "/usr/local/lib/node_modules" "/usr/lib/node_modules")
+        found_plop=false
+        
+        for NODE_MODULES_PATH in "${NODE_MODULES_PATHS[@]}"; do
+            if [ -f "$NODE_MODULES_PATH/plop-generator/node_modules/.bin/plop" ]; then
+                "$NODE_MODULES_PATH/plop-generator/node_modules/.bin/plop" java-microservice --plopfile "$NODE_MODULES_PATH/plop-generator/plopfile.js"
+                found_plop=true
+                break
+            fi
+        done
+        
+        # 如果都没找到，给出错误提示
+        if [ "$found_plop" = false ]; then
+            echo -e "\n${RED}错误: 找不到plop命令。请确保已正确安装plop-generator。${NC}\n"
+            echo "您可以尝试以下命令安装:"
+            echo "  npm install -g plop-generator"
+            return 1
+        fi
+    fi
 }
 
 # 生成Golang项目
@@ -99,7 +132,7 @@ function main() {
         esac
     done
     
-    echo "\n${GREEN}项目生成过程已完成！${NC}\n"
+    echo -e "\n${GREEN}项目生成过程已完成！${NC}\n"
 }
 
 # 执行主函数
