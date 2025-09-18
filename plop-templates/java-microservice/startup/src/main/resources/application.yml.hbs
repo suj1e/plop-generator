@@ -1,0 +1,47 @@
+app:
+  startup:
+    ns: {{ns}}
+server:
+  port: {{appPort}}
+  servlet:
+    context-path: {{servletContextPath}}
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        # 开启端点，*表示开启所有
+        include:
+          - '*'
+        # 某些端点除外，不做开启
+        exclude:
+          - env
+          - beans
+  # 指标采集标签名
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  # 启用对接prometheus服务采集指标数据
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+jasypt:
+  encryptor:
+    password: sparrow
+    algorithm: PBEWithMD5AndDES
+spring:
+  application:
+    name: @project.parent.artifactId@
+  profiles:
+    active: @profiles.active@
+  threads:
+    virtual:
+      enabled: true
+  task:
+    execution:
+      thread-name-prefix: @project.parent.artifactId@-task-
+    scheduling:
+      thread-name-prefix: @project.parent.artifactId@-scheduling-

@@ -1,0 +1,17 @@
+package {{groupId}}.aop;
+
+import org.flooc.combox.boot.web.logging.AppLogging;
+import org.flooc.combox.boot.web.servlet.AbstractWebMvcExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/**
+ * 注意先后捕获顺序
+ *
+ * @author sujie
+ * @since 1.0.0
+ */
+@AppLogging(enable = false)
+@RestControllerAdvice("{{groupId}}.presentation")
+public class AppWebMvcExceptionHandler extends AbstractWebMvcExceptionHandler {
+
+}
