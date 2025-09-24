@@ -4,6 +4,8 @@
  */
 
 module.exports = function(plop) {
+    const userWorkingDir = process.env.USER_WORKING_DIR || process.cwd();
+    
     // Java微服务项目生成器
     plop.setGenerator('java-microservice', {
         description: '生成完整的Java微服务项目结构',
@@ -72,223 +74,233 @@ module.exports = function(plop) {
                     return true;
                 }
             },
+            {                
+                type: 'input',                
+                name: 'startId',                
+                message: '请输入启动类名称',                
+                default: function(answers) {                    
+                    // artifactId拆分转换为驼峰且大写规范的名字                    
+                    const startId = answers.artifactId.split('-').map((word, index) => {                        
+                        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();                    
+                    }).join('');                    
+                    return startId + 'Application';                
+                }            
+            },
             {
-                type: 'input',
-                name: 'startId',
-                message: '请输入启动类名称',
-                default: function(answers) {
-                    // artifactId拆分转换为驼峰且大写规范的名字
-                    const startId = answers.artifactId.split('-').map((word, index) => {
-                        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                    }).join('');
-                    return startId + 'Application';
-                }
+                type: 'confirm',
+                name: 'generateInCurrentDir',
+                message: '是否直接在当前目录生成项目？(默认创建以artifactId命名的子目录)',
+                default: false
             }
         ],
         actions: function(data) {
             // 创建所有需要生成的文件操作
-            const actions = [
-                // 根目录文件
+            const actions = [];
+            // 使用relativePathPrefix替代basePath
+            const relativePathPrefix = data.generateInCurrentDir ? '' : '{{artifactId}}/';
+            const modulePrefix = data.generateInCurrentDir ? '' : '{{artifactId}}-';
+            // 根目录文件
+            actions.push(
                 {
                     type: 'add',
-                    path: '{{artifactId}}/.apifox-helper.properties',
+                    path: userWorkingDir + '/' + relativePathPrefix + '.apifox-helper.properties',
                     templateFile: 'plop-templates/java-microservice/.apifox-helper.properties.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/.gitattributes',
+                    path: userWorkingDir + '/' + relativePathPrefix + '.gitattributes',
                     templateFile: 'plop-templates/java-microservice/.gitattributes.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/.gitignore',
+                    path: userWorkingDir + '/' + relativePathPrefix + '.gitignore',
                     templateFile: 'plop-templates/java-microservice/.gitignore.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + 'pom.xml',
                     templateFile: 'plop-templates/java-microservice/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/compile.sh',
+                    path: userWorkingDir + '/' + relativePathPrefix + 'compile.sh',
                     templateFile: 'plop-templates/java-microservice/compile.sh.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/flow.sh',
+                    path: userWorkingDir + '/' + relativePathPrefix + 'flow.sh',
                     templateFile: 'plop-templates/java-microservice/flow.sh.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/mvnw',
+                    path: userWorkingDir + '/' + relativePathPrefix + 'mvnw',
                     templateFile: 'plop-templates/java-microservice/mvnw.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/mvnw.cmd',
+                    path: userWorkingDir + '/' + relativePathPrefix + 'mvnw.cmd',
                     templateFile: 'plop-templates/java-microservice/mvnw.cmd.hbs'
                 },
                 
                 // mvn包装器目录
                 {
                     type: 'add',
-                    path: '{{artifactId}}/.mvn/wrapper/maven-wrapper.properties',
+                    path: userWorkingDir + '/' + relativePathPrefix + '.mvn/wrapper/maven-wrapper.properties',
                     templateFile: 'plop-templates/java-microservice/.mvn/wrapper/maven-wrapper.properties.hbs'
                 },
                 
                 // 模块目录
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-api/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'api/pom.xml',
                     templateFile: 'plop-templates/java-microservice/api/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-application/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'application/pom.xml',
                     templateFile: 'plop-templates/java-microservice/application/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-domain/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'domain/pom.xml',
                     templateFile: 'plop-templates/java-microservice/domain/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-openfeign-client/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'openfeign-client/pom.xml',
                     templateFile: 'plop-templates/java-microservice/openfeign-client/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-openfeign-provider/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'openfeign-provider/pom.xml',
                     templateFile: 'plop-templates/java-microservice/openfeign-provider/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-infrastructure/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'infrastructure/pom.xml',
                     templateFile: 'plop-templates/java-microservice/infrastructure/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-presentation/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'presentation/pom.xml',
                     templateFile: 'plop-templates/java-microservice/presentation/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/pom.xml',
                     templateFile: 'plop-templates/java-microservice/startup/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-tests/pom.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'tests/pom.xml',
                     templateFile: 'plop-templates/java-microservice/tests/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-distribution/pom.xml', 
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'distribution/pom.xml', 
                     templateFile: 'plop-templates/java-microservice/distribution/pom.xml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-distribution/release-assembly.xml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'distribution/release-assembly.xml',
                     templateFile: 'plop-templates/java-microservice/distribution/release-assembly.xml.hbs'
                 },
                 
                 // 云部署相关文件
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-distribution/cloud/Dockerfile',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'distribution/cloud/Dockerfile',
                     templateFile: 'plop-templates/java-microservice/distribution/cloud/Dockerfile.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-distribution/cloud/applydc.sh',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'distribution/cloud/applydc.sh',
                     templateFile: 'plop-templates/java-microservice/distribution/cloud/applydc.sh.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-distribution/cloud/applyk8s.sh',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'distribution/cloud/applyk8s.sh',
                     templateFile: 'plop-templates/java-microservice/distribution/cloud/applyk8s.sh.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-distribution/cloud/docker-compose.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'distribution/cloud/docker-compose.yml',
                     templateFile: 'plop-templates/java-microservice/distribution/cloud/docker-compose.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-distribution/cloud/k8s.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'distribution/cloud/k8s.yml',
                     templateFile: 'plop-templates/java-microservice/distribution/cloud/k8s.yml.hbs'
                 },
 
                 // startup文件
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/java/{{appDir}}/{{startId}}.java',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/java/{{appDir}}/{{startId}}.java',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/java/Application.java.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/java/{{appDir}}/aop/AppWebMvcExceptionHandler.java',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/java/{{appDir}}/aop/AppWebMvcExceptionHandler.java',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/java/aop/AppWebMvcExceptionHandler.java.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-cloud-dev.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-cloud-dev.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-cloud-dev.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-cloud-gray.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-cloud-gray.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-cloud-gray.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-cloud-prod.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-cloud-prod.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-cloud-prod.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-cloud-staging.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-cloud-staging.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-cloud-staging.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-cloud-test.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-cloud-test.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-cloud-test.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-dev.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-dev.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-dev.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-gray.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-gray.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-gray.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-staging.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-staging.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-staging.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-prod.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-prod.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-prod.yml.hbs'
                 },
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-startup/src/main/resources/application-test.yml',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-test.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-test.yml.hbs'
                 },
                 // infrastructure文件
                 {
                     type: 'add',
-                    path: '{{artifactId}}/{{artifactId}}-infrastructure/src/main/java/{{appDir}}/infrastructure/package-info.java',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'infrastructure/src/main/java/{{appDir}}/infrastructure/package-info.java',
                     templateFile: 'plop-templates/java-microservice/infrastructure/src/main/java/infrastructure/package-info.java.hbs'
-                }, 
-            ];
+                }
+            );
             
             return actions;
         }

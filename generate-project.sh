@@ -49,11 +49,19 @@ function generate_java_project() {
     # 确保指定plopfile.js的完整路径
     PLOPFILE_PATH="$SCRIPT_DIR/plopfile.js"
     
+    # 确保USER_WORKING_DIR存在并且是目录
+    if [ ! -d "$USER_WORKING_DIR" ]; then
+        echo -e "${RED}错误：目录 $USER_WORKING_DIR 不存在${NC}"
+        exit 1
+    fi
+    
     if command -v plop &> /dev/null; then
-        # 如果系统中有plop命令，直接使用并指定plopfile路径
+        # 如果系统中有plop命令，直接使用并指定plopfile路径和目标目录
+        cd "$USER_WORKING_DIR" 2>&1
         plop java-microservice --plopfile "$PLOPFILE_PATH"
     elif [ -f "$SCRIPT_DIR/node_modules/.bin/plop" ]; then
-        # 如果在当前项目的node_modules中有plop，使用它并指定plopfile路径
+        # 如果项目本地有plop，使用项目本地的plop
+        cd "$USER_WORKING_DIR" 2>&1
         "$SCRIPT_DIR/node_modules/.bin/plop" java-microservice --plopfile "$PLOPFILE_PATH"
     else
         # 尝试全局node_modules路径（适用于全局安装的情况）
@@ -63,6 +71,7 @@ function generate_java_project() {
         
         for NODE_MODULES_PATH in "${NODE_MODULES_PATHS[@]}"; do
             if [ -f "$NODE_MODULES_PATH/plop-generator/node_modules/.bin/plop" ]; then
+                cd "$USER_WORKING_DIR" 2>&1
                 "$NODE_MODULES_PATH/plop-generator/node_modules/.bin/plop" java-microservice --plopfile "$NODE_MODULES_PATH/plop-generator/plopfile.js"
                 found_plop=true
                 break
@@ -72,7 +81,7 @@ function generate_java_project() {
         # 如果都没找到，给出错误提示
         if [ "$found_plop" = false ]; then
             echo -e "\n${RED}错误: 找不到plop命令。请确保已正确安装plop-generator。${NC}\n"
-            echo "您可以尝试以下命令安装:"
+            echo "您可以尝试以下命令安装:" 
             echo "  npm install -g plop-generator"
             return 1
         fi
@@ -99,6 +108,13 @@ function generate_frontend_project() {
 
 # 主函数
 function main() {
+    # 优先使用从环境变量传递的用户工作目录，如果不存在则使用pwd获取
+    echo "generate-project.sh - 接收到的USER_WORKING_DIR: $USER_WORKING_DIR"
+    if [ -z "$USER_WORKING_DIR" ]; then
+        USER_WORKING_DIR="$(pwd)"
+        echo "generate-project.sh - USER_WORKING_DIR为空，使用pwd: $USER_WORKING_DIR"
+    fi
+    
     show_welcome
     
     while true; do

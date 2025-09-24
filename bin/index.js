@@ -62,10 +62,16 @@ const runShellScript = () => {
     env.DISABLE_COLORS = 'true';
   }
   
+  // 显式传递用户的当前工作目录作为环境变量
+  const userWorkingDir = process.cwd();
+  
+  // 确保USER_WORKING_DIR环境变量设置正确
+  env.USER_WORKING_DIR = userWorkingDir;
+  
   // 使用spawn执行shell脚本，并将标准输入、输出、错误流与父进程相连
   const shellScript = spawn('bash', [scriptPath], {
     stdio: 'inherit', // 继承父进程的stdio流，实现交互式输入输出
-    cwd: process.cwd(), // 在当前工作目录执行脚本
+    cwd: userWorkingDir, // 在当前工作目录执行脚本
     env: env // 传递环境变量
   });
 
