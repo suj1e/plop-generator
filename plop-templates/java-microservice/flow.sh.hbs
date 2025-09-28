@@ -24,7 +24,7 @@ case "$option" in
         echo "$pkgEnv"
         echo $opMsg
         mvn clean
-        mvn -B clean package -Dmaven.test.skip=true -P{{appName}}-spring-boot-package -P{{appName}}-assembly-package -P"{{pkgEnv}}"
+        mvn -B clean package -Dmaven.test.skip=true -P${appName}-spring-boot-package -P${appName}-assembly-package -P"${pkgEnv}"
         ;;
     -t)
         opMsg="test"

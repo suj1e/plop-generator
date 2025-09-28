@@ -3,6 +3,8 @@ services:
   {{appName}}:
     image: registry.cn-shanghai.aliyuncs.com/{{ns}}/{{appName}}:v1.0.0
     container_name: {{appName}}
+    environment:
+      - TZ=Asia/Shanghai
     volumes:
       - ~/app/logs:/{{appName}}/logs
     ports:

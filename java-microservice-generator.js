@@ -87,6 +87,17 @@ module.exports = function(plop) {
                 }            
             },
             {
+                type: 'input',
+                name: 'jasyptPassword',
+                message: '请输入Jasypt加密密码',
+                validate: function(value) {
+                    if (!value || value.trim() === '') {
+                        return 'Jasypt加密密码不能为空';
+                    }
+                    return true;
+                }
+            },
+            {
                 type: 'confirm',
                 name: 'generateInCurrentDir',
                 message: '是否直接在当前目录生成项目？(默认创建以artifactId命名的子目录)',
@@ -98,7 +109,7 @@ module.exports = function(plop) {
             const actions = [];
             // 使用relativePathPrefix替代basePath
             const relativePathPrefix = data.generateInCurrentDir ? '' : '{{artifactId}}/';
-            const modulePrefix = data.generateInCurrentDir ? '' : '{{artifactId}}-';
+            const modulePrefix = '{{artifactId}}-';
             // 根目录文件
             actions.push(
                 {
@@ -243,6 +254,11 @@ module.exports = function(plop) {
                     type: 'add',
                     path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/java/{{appDir}}/aop/AppWebMvcExceptionHandler.java',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/java/aop/AppWebMvcExceptionHandler.java.hbs'
+                },
+                {
+                    type: 'add',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application.yml',
+                    templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application.yml.hbs'
                 },
                 {
                     type: 'add',

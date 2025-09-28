@@ -1,9 +1,10 @@
 logging:
   level:
-    root: ERROR
-  structured:
-    format:
-      file: ecs
+    com.alibaba.nacos: OFF # nacos 心跳日志屏蔽
+    root: INFO
+#  structured:
+#    format:
+#      file: ecs
   file:
     name: ./logs/${spring.application.name}/app-test.log
 spring:

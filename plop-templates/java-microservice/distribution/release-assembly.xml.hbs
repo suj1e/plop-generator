@@ -1,35 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>{{groupId}}</groupId>
-    <artifactId>{{artifactId}}</artifactId>
-    <version>${revision}</version>
-  </parent>
+<assembly>
+  <id>{{appName}}-assembly</id>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>../</directory>
+      <includes>
+        <include>README.md</include>
+      </includes>
+    </fileSet>
 
-  <packaging>jar</packaging>
-  <artifactId>{{artifactId}}-tests</artifactId>
-  <name>${project.artifactId} ${project.version}</name>
+    <fileSet>
+      <includes>
+        <include>cloud/applydc.sh</include>
+        <include>cloud/applyk8s.sh</include>
+      </includes>
+      <fileMode>0755</fileMode>
+    </fileSet>
 
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-    <maven.install.skip>true</maven.install.skip>
-    <maven.test.skip>false</maven.test.skip>
-  </properties>
+    <fileSet>
+      <includes>
+        <include>cloud/k8s.yml</include>
+        <include>cloud/docker-compose.yml</include>
+      </includes>
+    </fileSet>
 
-  <dependencies>
-    <dependency>
-      <groupId>{{groupId}}</groupId>
-      <artifactId>{{artifactId}}-startup</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  </fileSets>
 
-</project>
+  <files>
+    <!-- app jar -->
+    <file>
+      <source>../{{artifactId}}-startup/target/{{appName}}.jar</source>
+      <outputDirectory>target/</outputDirectory>
+    </file>
+    <!-- Dockerfile -->
+    <file>
+      <source>./cloud/Dockerfile</source>
+      <outputDirectory/>
+    </file>
+  </files>
+
+
+
+</assembly>
