@@ -320,7 +320,7 @@ module.exports = function(plop) {
                 {
                     type: 'add',
                     path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'tests/src/test/java/{{appDir}}/Abstract{{startId}}Test.java',
-                    templateFile: 'plop-templates/java-microservice/tests/src/test/java/tests/AbstractApplicationTest.java.hbs'
+                    templateFile: 'plop-templates/java-microservice/tests/src/test/java/AbstractApplicationTest.java.hbs'
                 }
             );
             
