@@ -315,6 +315,12 @@ module.exports = function(plop) {
                     type: 'add',
                     path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'infrastructure/src/main/java/{{appDir}}/infrastructure/package-info.java',
                     templateFile: 'plop-templates/java-microservice/infrastructure/src/main/java/infrastructure/package-info.java.hbs'
+                },
+                // tests文件
+                {
+                    type: 'add',
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'tests/src/test/java/{{appDir}}/Abstract{{startId}}Test.java',
+                    templateFile: 'plop-templates/java-microservice/tests/src/test/java/tests/AbstractApplicationTest.java.hbs'
                 }
             );
             
