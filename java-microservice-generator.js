@@ -252,8 +252,8 @@ module.exports = function(plop) {
                 },
                 {
                     type: 'add',
-                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/java/{{appDir}}/aop/AppWebMvcExceptionHandler.java',
-                    templateFile: 'plop-templates/java-microservice/startup/src/main/java/aop/AppWebMvcExceptionHandler.java.hbs'
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/java/{{appDir}}/aop/AppWebExceptionHandler.java',
+                    templateFile: 'plop-templates/java-microservice/startup/src/main/java/aop/AppWebExceptionHandler.java.hbs'
                 },
                 {
                     type: 'add',

@@ -1,7 +1,7 @@
 package {{groupId}}.aop;
 
 import org.flooc.combox.boot.web.logging.AppLogging;
-import org.flooc.combox.boot.web.servlet.AbstractWebMvcExceptionHandler;
+import org.flooc.combox.boot.web.exception.AbstractWebExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @AppLogging(enable = false)
 @RestControllerAdvice("{{groupId}}.presentation")
-public class AppWebMvcExceptionHandler extends AbstractWebMvcExceptionHandler {
+public class AppWebExceptionHandler extends AbstractWebExceptionHandler {
 
 }
