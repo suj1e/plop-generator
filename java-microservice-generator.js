@@ -178,13 +178,8 @@ module.exports = function(plop) {
                 },
                 {
                     type: 'add',
-                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'openfeign-client/pom.xml',
-                    templateFile: 'plop-templates/java-microservice/openfeign-client/pom.xml.hbs'
-                },
-                {
-                    type: 'add',
-                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'openfeign-provider/pom.xml',
-                    templateFile: 'plop-templates/java-microservice/openfeign-provider/pom.xml.hbs'
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'dubbo-provider/pom.xml',
+                    templateFile: 'plop-templates/java-microservice/dubbo-provider/pom.xml.hbs'
                 },
                 {
                     type: 'add',
@@ -252,8 +247,8 @@ module.exports = function(plop) {
                 },
                 {
                     type: 'add',
-                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/java/{{appDir}}/aop/AppWebExceptionHandler.java',
-                    templateFile: 'plop-templates/java-microservice/startup/src/main/java/aop/AppWebExceptionHandler.java.hbs'
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/java/{{appDir}}/exception/AppWebExceptionHandler.java',
+                    templateFile: 'plop-templates/java-microservice/startup/src/main/java/exception/AppWebExceptionHandler.java.hbs'
                 },
                 {
                     type: 'add',
@@ -310,11 +305,11 @@ module.exports = function(plop) {
                     path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'startup/src/main/resources/application-test.yml',
                     templateFile: 'plop-templates/java-microservice/startup/src/main/resources/application-test.yml.hbs'
                 },
-                // infrastructure文件
+                // domain文件
                 {
                     type: 'add',
-                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'infrastructure/src/main/java/{{appDir}}/infrastructure/package-info.java',
-                    templateFile: 'plop-templates/java-microservice/infrastructure/src/main/java/infrastructure/package-info.java.hbs'
+                    path: userWorkingDir + '/' + relativePathPrefix + modulePrefix + 'domain/src/main/java/{{appDir}}/domain/package-info.java',
+                    templateFile: 'plop-templates/java-microservice/domain/src/main/java/package-info.java.hbs'
                 },
                 // tests文件
                 {

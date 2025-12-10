@@ -21,7 +21,7 @@ npm install
 Run the generator with:
 
 ```bash
-sh generate-project.sh
+plop-generator
 ```
 
 You will be prompted to choose a generator and provide necessary information.

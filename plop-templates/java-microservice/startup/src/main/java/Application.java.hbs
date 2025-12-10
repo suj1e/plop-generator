@@ -1,13 +1,16 @@
 package {{groupId}};
 
-import org.flooc.combox.autoconfigure.boot.ComboXApp;
+import org.flooc.cox.app.logging.EnableAppLogging;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
-//@EnableFeignClients(basePackages = "")
-//@EnableJpaAuditing
+
 //@EnableDiscoveryClient
-@ComboXApp
+//@EnableLeafServer
+//@EnableJpaAuditing
+@EnableAppLogging
+@EnableAsync
 @SpringBootApplication
 public class {{startId}} {
 
