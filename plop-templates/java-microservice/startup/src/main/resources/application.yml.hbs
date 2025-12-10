@@ -31,7 +31,8 @@ management:
 jasypt:
   encryptor:
     password: {{jasyptPassword}}
-    algorithm: PBEWithMD5AndDES
+    algorithm: PBEWithMD5AndTripleDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
 spring:
   application:
     name: @project.parent.artifactId@
