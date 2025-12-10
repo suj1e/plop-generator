@@ -13,7 +13,7 @@ A simple yet powerful code generator for backend applications using [Plop](https
 3. Install dependencies:
 
 ```bash
-npm install
+npm install -g plop-generator
 ```
 
 ## Usage
